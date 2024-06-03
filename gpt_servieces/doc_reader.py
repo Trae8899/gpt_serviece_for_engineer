@@ -5,11 +5,12 @@ import os
 
 
 def textfile_reader(filepath:str)->str:
+    print("afkjadslkfja;lsdkfja;sldkj")
     basename = os.path.basename(filepath)
     filenames=os.path.splitext(basename)
     ext=filenames[1]
     filename=filenames[0]
-
+    print(ext)
     if ext.upper()==".PDF":
         loader = PyMuPDFLoader(filepath)
     elif ext.upper()==".DOCX"|".DOC":
@@ -22,7 +23,8 @@ def textfile_reader(filepath:str)->str:
     temp = ""
 
     for i in document:
-        temp = i.get_text()
+        print(i)
+        temp = i.page_content
         temp = temp.replace("\n", " ")
         ext_text = ext_text + temp
         temp = ""

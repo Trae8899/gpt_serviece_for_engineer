@@ -1,0 +1,109 @@
+ 
+ 
+연락처
+qkrwogus88@naver.com
+www.linkedin.com/in/jaehyun-
+park-0a0411182 (LinkedIn)
+대표 보유기술
+MS 오피스
+파이톤
+프로그래밍
+Jaehyun Park
+Doosan Heavy Industries & Construction Mechanical Engineer
+대한민국 인천 연수구
+간단프로필
+-Piping Design Engineer-
+#Project#
+1. Field Engineer, India Thermal Power Plant (Lara 800 X 2) - 2016
+* progress tracking and facilitating communication between the field
+and the Design Team.
+2. Piping Design, India Thermal Power Plant Projects ( Obra 660 X
+2, Jawaharpur 660 X 2 ) - 2017~2019
+* Making Basic Document( PMS, PIS, Line List )
+Developed Piping Calculation and Specification in compliance with
+IBR, ASME
+* Review for Piping Document  & Communication with Vendor 
+3. Piping Design, Korea Thermal Power Plant Projects (Samcheock
+1050 X 2 ) - 2019 ~ 2024
+* Conducted comprehensive Piping Arrangement for Yard Area
+- PAD, ISO
+* Basic Document ( PMS, PIS, Line List )
+* Review for Other Package Item
+* SP3D modeling ( Since the end of the contract with the
+outsourcing ) - PIping/Support
+#Side Work#
+1. Upgrade Calculation Standard
+* Making PIS Calculation ( ASME C680 - 89,04 / KS F2804 ) - Based
+on VBA
+- 2017 : Making ASME C680-04 Calculation ( On 2004, ASME C680
+was major updated.)
+combine between ASME C680-04, 89
+- 2019 : Combine with KS F2804 Calculation 
+ 
+Page 1 of 3
+ 
+ 
+* Update ASME B31.1 Pipe Calculation - VBA
+- 2018 : Update ASEM B31.1 Calculation ( Automatically calculate
+WSRF on Creep Temp, Event Case )
+- 2020 : Making Rating Calculation ( ASME B16.34 - 2019, 2020
+Added )
+* Update AWWA M11 Calculation - Excel
+- 2017 : Update AWWA M11 Calculation ( combined Encasement
+Strength using PCCP Calculation )
+* Making AWWA M45 Calculation - Excel
+- 2019 : Making AWWA M45 Calculation for Checking Vendor
+Calculation.
+* Making PMS Automation Tool
+- 2022 : Making PMS Automation Based on VBA ( Finished )
+- 2023 : Making PMS Automation Based on Python ( On going ) 
+3. Using GPT
+- RAG ( Chatbot with Code ( ASME Code/Design Standard ) )
+* by using Langchain, FAISS, openai API
+- Tool for Making Chatbot  - https://github.com/Trae8899/chatbot-
+Faiss
+#Skills & Expertise#
+1. Piping Design & Standards
+- Proficience in thermal plant piping design, adhering to ASME, IBR,
+and AWWA standards.
+2. Technical Calculations
+- Skilled in creating and optimizing piping calculations and
+specifications.
+3. Programming
+경력
+Doosan Heavy Industries & Construction
+Mechanical Engineer
+2015년 12월 - Present (8년 4개월)
+대한민국 경기도 분당동
+ 
+Page 2 of 3
+ 
+ 
+1. Developing Standard Design Calculator
+1> VBA ( 2016 ~ 2022)
+ASME B31 Thickness Calculation
+AWWA M11
+AWWA M45
+ASTM C680 - 89/2004
+KS F 2804
+PMS Automation (B31) - on going
+2> Python ( 2023 ~) - Desktop App
+ASME B31 Thickness Calculation
+AWWA M11
+AWWA M45
+RAG Chatbot
+3D ISO Information reader
+2. PJT WORK
+INDIA TPP Project (Obra & Jawaharpur) - 2017~2019
+PMS, PIS
+SUPPORT DETAIL REVIEW
+ISO/PAD REVIEW
+KOREA TPP Project (Samcheok) - 2019 ~
+PMS PIS
+YARD (PAD, ISO, etc.)
+학력
+고려대학교
+Bachelor of Engineering - BE, Mechanical Engineering · (2007년 3월 - 2015년
+2월)
+ 
+Page 3 of 3

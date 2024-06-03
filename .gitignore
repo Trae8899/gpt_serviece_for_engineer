@@ -4,8 +4,9 @@
 ### Python ###
 
 #IDEA
-instuction/*.*
+instruction/*.*
 *.env
+llms/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
