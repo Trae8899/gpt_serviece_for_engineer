@@ -2,11 +2,14 @@ import streamlit as st
 from langchain.chains.conversation.base import ConversationChain
 from langchain.memory import ConversationBufferMemory
 from langchain_openai import OpenAI,ChatOpenAI
+from langchain_openai import AzureOpenAI,AzureChatOpenAI
+from langchain.llms.fake import FakeListLLM
 from st_pages import Page, Section, show_pages, add_page_title, hide_pages
 from streamlit_feedback import streamlit_feedback
 
-st.set_page_config(page_title="RAG : Simple Feedback", page_icon="🦜")
-st.title("🦜 RAG : Simple Feedback")
+st.set_page_config(page_title="Client Comment", page_icon="🦜")
+st.sidebar.image(r"C:\Users\qkrwo\Documents\Digital\JPark\gpt_serviece_for_engineer\asset\Doosan_Logo.jpg")
+st.sidebar.write("# EPC)PE CENTER 👋")
 
 st.sidebar.success("Select a model that you want.")
 
@@ -18,32 +21,51 @@ if 'AZURE_OPENAI_API_KEY' not in st.session_state:
     st.session_state['AZURE_OPENAI_API_KEY'] = None
 if 'AZURE_OPENAI_ENDPOINT' not in st.session_state:
     st.session_state['AZURE_OPENAI_ENDPOINT'] = None
+if 'teams' not in st.session_state:
+    st.session_state['teams'] = 'Piping'
 
 # 사이드바에서 모듈 선택
 def update_llms():
-    st.session_state['llms'] = st.session_state.selectbox
+    st.session_state['llms'] = st.session_state.selectllm
 
 # 사이드바에서 모듈 선택
-selectbox = st.sidebar.selectbox(
+selectllm = st.sidebar.selectbox(
     "Which Module do you want?",
     ("OPENAI", "AZURE OPEN AI", "FAKELLM"),
     index=["OPENAI", "AZURE OPEN AI", "FAKELLM"].index(st.session_state['llms']),
-    key='selectbox',
+    key='selectllm',
     on_change=update_llms
 )
 
 if st.session_state['llms'] == "OPENAI":
     st.session_state['OPENAIAPI'] = st.sidebar.text_input("API KEY", value=st.session_state['OPENAIAPI'],type="password")
+    llm = ChatOpenAI(openai_api_key=st.session_state['OPENAIAPI'],model="gpt-4o")
     
 elif st.session_state['llms'] == "AZURE OPEN AI":
     st.session_state['AZURE_OPENAI_API_KEY'] = st.sidebar.text_input("API KEY", value=st.session_state['AZURE_OPENAI_API_KEY'])
     st.session_state['AZURE_OPENAI_ENDPOINT'] = st.sidebar.text_input("END POINT", value=st.session_state['AZURE_OPENAI_ENDPOINT'])
+    llm = AzureChatOpenAI()
+else:
+    llm=FakeListLLM(responses=["fakellm1","fakellm2","fakellm3"])
 
+st.title("🦜 Client Comment checker")
+pjtname=st.selectbox(
+    "PJT NAME",
+    ("jawa9&10","lumar","samcheok"),
+    )
+def update_teams():
+    st.session_state['teams'] = st.session_state.selectteam
 
-# LangChain 설정
-
+# 사이드바에서 모듈 선택
+selectteam = st.selectbox(
+    "Which team?",
+    ("Piping", "Plant Engineering", "Process", "Civil"),
+    index=["Piping", "Plant Engineering", "Process", "Civil"].index(st.session_state['teams']),
+    key='selectteam',
+    on_change=update_teams
+)
 # gpt-3.5-turbo-instruct
-llm = ChatOpenAI(openai_api_key=st.session_state['OPENAIAPI'],model="gpt-4o")
+# llm = ChatOpenAI(openai_api_key=st.session_state['OPENAIAPI'],model="gpt-4o")
 # llm = OpenAI(openai_api_key=st.session_state['OPENAIAPI'],model_name="gpt-4o")
 memory = ConversationBufferMemory()
 llm_chain = ConversationChain(llm=llm, memory=memory)

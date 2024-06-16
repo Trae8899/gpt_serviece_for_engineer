@@ -1,31 +1,36 @@
 import streamlit as st
 from st_pages import Page, Section, show_pages, add_page_title, hide_pages
+from langchain_openai import OpenAI,ChatOpenAI
+from langchain_openai import AzureOpenAI,AzureChatOpenAI
+from langchain.llms.fake import FakeListLLM
 
 st.set_page_config(
     page_title="Engineering GPTs",
     page_icon="👋",
 )
-add_page_title()
 
 show_pages(
     [
-        Page(r"gpts\page.py", "Engineering GPTs", "💻", in_section=False),
-        Page(r"gpts\page2_embedding.py", "HOW to Use GPT", "💻", in_section=False),
-        
+        Page(r"gpts\main_page.py", "Engineering GPTs", "💻", in_section=False),
         # GPT 사용법
-        Section("Engineering GPTs", "👨‍🔧"),
-        Page(r"C:\Users\qkrwo\Documents\Digital\JPark\gpt_serviece_for_engineer\tests\page2\Week_2_Workflow_Orchestration.py", "LL Search", "📚", in_section=True),
-        Page(r"gpts\page3_engineering_chatbot.py", "Engineering Chatbot", "1️⃣", in_section=True),
+        Page(r"gpts\how2use.py", "HOW to Use GPT", "💻", in_section=False),
+        
+        Section("Engineeringss GPTs", "👨‍🔧"),
+        Page(r"gpts\ll_search.py", "LL Search", "📚", in_section=True),
+        Page(r"gpts\engineering_chatbot.py", "Engineering Chatbot", "🦜", in_section=True),
         
         Section("RFP Search Tool", "👨‍🔧"),
-        Page(r"gpts\page3_embedding.py",  "Upload RFP", "📚", in_section=True),
-        Page(r"gpts\excelshow.py", "Check Toxic Clause", "1️⃣", in_section=True),
-        Page(r"C:\Users\qkrwo\Documents\Digital\JPark\gpt_serviece_for_engineer\gpts\RAG_Feedback.py", "Chat for Client Comment", "❔", in_section=True),
-        Page(r"C:\Users\qkrwo\Documents\Digital\JPark\gpt_serviece_for_engineer\gpts\RAG_Feedback.py", "Just Chatbot", "❔", in_section=True),
+        Page(r"gpts\rfp_toxics.py", "Check Toxic Clause", "1️⃣", in_section=True),
+        Page(r"gpts\rfp_chatbot.py", "RFP Chatbot", "❔", in_section=True),
+        Page(r"gpts\upload_rfp.py",  "Upload RFP", "📚", in_section=True),
+        Page(r"gpts\RAG_Feedback2.py", "Chat for Client Comment", "❔", in_section=True),
 
-        Page(r"C:\Users\qkrwo\Documents\Digital\JPark\gpt_serviece_for_engineer\tests\page2\Week_7_Project.py", "FAQ", "❔", in_section=False),
+        Page(r"gpts\faq2.py", "FAQ", "❔", in_section=False),
     ]
 )
+st.sidebar.image(r"C:\Users\qkrwo\Documents\Digital\JPark\gpt_serviece_for_engineer\asset\Doosan_Logo.jpg")
+st.sidebar.write("# EPC)PE CENTER 👋")
+
 st.sidebar.success("Select a model that you want.")
 
 if 'llms' not in st.session_state:
@@ -39,23 +44,27 @@ if 'AZURE_OPENAI_ENDPOINT' not in st.session_state:
 
 # 사이드바에서 모듈 선택
 def update_llms():
-    st.session_state['llms'] = st.session_state.selectbox
+    st.session_state['llms'] = st.session_state.selectllm
 
 # 사이드바에서 모듈 선택
-selectbox = st.sidebar.selectbox(
+selectllm = st.sidebar.selectbox(
     "Which Module do you want?",
     ("OPENAI", "AZURE OPEN AI", "FAKELLM"),
     index=["OPENAI", "AZURE OPEN AI", "FAKELLM"].index(st.session_state['llms']),
-    key='selectbox',
+    key='selectllm',
     on_change=update_llms
 )
 
 if st.session_state['llms'] == "OPENAI":
-    st.session_state['OPENAIAPI'] = st.sidebar.text_input("API KEY", value=st.session_state['OPENAIAPI'])
+    st.session_state['OPENAIAPI'] = st.sidebar.text_input("API KEY", value=st.session_state['OPENAIAPI'],type="password")
+    llm = ChatOpenAI(openai_api_key=st.session_state['OPENAIAPI'],model="gpt-4o")
+    
 elif st.session_state['llms'] == "AZURE OPEN AI":
     st.session_state['AZURE_OPENAI_API_KEY'] = st.sidebar.text_input("API KEY", value=st.session_state['AZURE_OPENAI_API_KEY'])
     st.session_state['AZURE_OPENAI_ENDPOINT'] = st.sidebar.text_input("END POINT", value=st.session_state['AZURE_OPENAI_ENDPOINT'])
-
+    llm = AzureChatOpenAI()
+else:
+    llm=FakeListLLM(responses=["fakellm1","fakellm2","fakellm3"])
 
 # Streamlit 페이지에 제목 표시
 st.write("# Welcome to GPT Service by J.Park! 👋")
@@ -82,7 +91,7 @@ with st.expander("Contact with Me"):
     #""", unsafe_allow_html=True)
 
 st.markdown("""### 🔎 Overview""")
-st.image("https://github.com/Trae8899/chatbot-Faiss/blob/main/Concept.png")
+st.image("https://github.com/Trae8899/chatbot-Faiss/blob/main/Concept.png?raw=true")
 
 hide_streamlit_style = """
 <style>

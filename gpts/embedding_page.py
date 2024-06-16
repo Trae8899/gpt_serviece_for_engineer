@@ -2,16 +2,17 @@ import streamlit as st
 from st_pages import Page, Section, show_pages, add_page_title, hide_pages
 import os
 from datetime import date
-import fitz  # PyMuPDF
+import pymupdf4llm  # PyMuPDF
 from langchain.embeddings import OpenAIEmbeddings
 import faiss
+import fitz
 import numpy as np
 
 st.set_page_config(
     page_title="Engineering GPTs",
     page_icon="👋",
 )
-st.sidebar.image(r"C:\Users\qkrwo\Documents\Digital\JPark\gpt_serviece_for_engineer\icon\Doosan_Logo.jpg")
+st.sidebar.image(r"C:\Users\qkrwo\Documents\Digital\JPark\gpt_serviece_for_engineer\asset\Doosan_Logo.jpg")
 st.sidebar.write("# EPC)PE CENTER 👋")
 
 st.sidebar.success("Select a model that you want.")
@@ -27,14 +28,14 @@ if 'AZURE_OPENAI_ENDPOINT' not in st.session_state:
 
 # 사이드바에서 모듈 선택
 def update_llms():
-    st.session_state['llms'] = st.session_state.selectbox
+    st.session_state['llms'] = st.session_state.selectllm
 
 # 사이드바에서 모듈 선택
-selectbox = st.sidebar.selectbox(
+selectllm = st.sidebar.selectbox(
     "Which Module do you want?",
     ("OPENAI", "AZURE OPEN AI", "FAKELLM"),
     index=["OPENAI", "AZURE OPEN AI", "FAKELLM"].index(st.session_state['llms']),
-    key='selectbox',
+    key='selectllm',
     on_change=update_llms
 )
 

@@ -7,9 +7,10 @@ from langchain.llms.fake import FakeListLLM
 from st_pages import Page, Section, show_pages, add_page_title, hide_pages
 from streamlit_feedback import streamlit_feedback
 
-st.set_page_config(page_title="RAG : Simple Feedback", page_icon="🦜")
-st.title("🦜 RAG : Simple Feedback")
+st.set_page_config(page_title="Engineering Chatbot", page_icon="🦜")
+
 st.sidebar.image(r"C:\Users\qkrwo\Documents\Digital\JPark\gpt_serviece_for_engineer\asset\Doosan_Logo.jpg")
+st.sidebar.write("# EPC)PE CENTER 👋")
 
 st.sidebar.success("Select a model that you want.")
 
@@ -21,6 +22,8 @@ if 'AZURE_OPENAI_API_KEY' not in st.session_state:
     st.session_state['AZURE_OPENAI_API_KEY'] = None
 if 'AZURE_OPENAI_ENDPOINT' not in st.session_state:
     st.session_state['AZURE_OPENAI_ENDPOINT'] = None
+if 'teams' not in st.session_state:
+    st.session_state['teams'] = 'Piping'
 
 # 사이드바에서 모듈 선택
 def update_llms():
@@ -46,8 +49,19 @@ elif st.session_state['llms'] == "AZURE OPEN AI":
 else:
     llm=FakeListLLM(responses=["fakellm1","fakellm2","fakellm3"])
 
+st.title("🦜 Engineering Chatbot")
+# 사이드바에서 모듈 선택
+def update_teams():
+    st.session_state['teams'] = st.session_state.selectteam
 
-# LangChain 설정
+# 사이드바에서 모듈 선택
+selectteam = st.selectbox(
+    "Which team?",
+    ("Piping", "Plant Engineering", "Process", "Civil"),
+    index=["Piping", "Plant Engineering", "Process", "Civil"].index(st.session_state['teams']),
+    key='selectteam',
+    on_change=update_teams
+)
 
 # gpt-3.5-turbo-instruct
 # llm = ChatOpenAI(openai_api_key=st.session_state['OPENAIAPI'],model="gpt-4o")
@@ -94,6 +108,9 @@ if input := st.chat_input(placeholder="Ask me anything..."):
     # 응답 저장 및 표시
     st.session_state.messages.append({"role": "assistant", "content": response})
     st.chat_message("assistant").write(response)
+
+    with st.expander("Show Original Lessons"):
+        st.write("원본 Data 한 2개?")
 
 # 피드백을 반영한 다음 대화 조정
 def adjust_response_based_on_feedback(response, feedback_scores):

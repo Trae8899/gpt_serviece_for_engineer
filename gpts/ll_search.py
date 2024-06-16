@@ -1,15 +1,21 @@
 import streamlit as st
+import pandas as pd
 from langchain.chains.conversation.base import ConversationChain
 from langchain.memory import ConversationBufferMemory
-from langchain_openai import OpenAI,ChatOpenAI
+from langchain_openai import OpenAI, ChatOpenAI
 from langchain_openai import AzureOpenAI,AzureChatOpenAI
 from langchain.llms.fake import FakeListLLM
 from st_pages import Page, Section, show_pages, add_page_title, hide_pages
 from streamlit_feedback import streamlit_feedback
 
-st.set_page_config(page_title="RAG : Simple Feedback", page_icon="🦜")
-st.title("🦜 RAG : Simple Feedback")
+st.set_page_config(
+    page_title="LL_Search",
+    page_icon="👋",
+)
+st.title("👋 LL_Search")
+
 st.sidebar.image(r"C:\Users\qkrwo\Documents\Digital\JPark\gpt_serviece_for_engineer\asset\Doosan_Logo.jpg")
+st.sidebar.write("# EPC)PE CENTER 👋")
 
 st.sidebar.success("Select a model that you want.")
 
@@ -46,29 +52,39 @@ elif st.session_state['llms'] == "AZURE OPEN AI":
 else:
     llm=FakeListLLM(responses=["fakellm1","fakellm2","fakellm3"])
 
+# Read the Excel file with lessons and learnings
+df = pd.read_excel(r'C:\Users\qkrwo\Documents\Digital\JPark\gpt_serviece_for_engineer\asset\ll_list\ll_list.xlsx')
+lessons_list = df.to_dict(orient='records')
 
 # LangChain 설정
-
-# gpt-3.5-turbo-instruct
-# llm = ChatOpenAI(openai_api_key=st.session_state['OPENAIAPI'],model="gpt-4o")
-# llm = OpenAI(openai_api_key=st.session_state['OPENAIAPI'],model_name="gpt-4o")
+# llm = ChatOpenAI(openai_api_key=st.session_state['OPENAIAPI'], model="gpt-4o")
 memory = ConversationBufferMemory()
 llm_chain = ConversationChain(llm=llm, memory=memory)
 
+# Function to include lessons and learnings in the conversation
+def include_lessons_in_response(input_text, lessons_list):
+    # Implement a simple search to find relevant lessons
+    relevant_lessons = [lesson for lesson in lessons_list if any(word.lower() in input_text.lower() for word in lesson.values())]
+    # lessons_text = "\n".join([f"Title: {lesson['Title (이슈제목)']}\nIssue Details: {lesson['Issue_Details (상세 내용)']}\nAction Result: {lesson['Action_Result (조치결과)']}\nCause: {lesson['Cause (근본원인)']}\nPreventive Measures: {lesson['Preventive_measures (향후 개선 방향)']}" for lesson in relevant_lessons])
+    # print(relevant_lessons)
+    # print(lessons_text)
+    return relevant_lessons
+
+
 # 채팅 기록 유지
-if "messages" not in st.session_state:
-    st.session_state.messages = []
-    st.session_state.feedback_scores = []
+if "llmessage" not in st.session_state:
+    st.session_state.llmessage = []
+    st.session_state.llfeedback_scores = []
 
 # 채팅 기록 초기화
 reset_history = st.sidebar.button("Reset chat history")
 if reset_history:
-    st.session_state.messages = []
-    st.session_state.feedback_scores = []
+    st.session_state.llmessage = []
+    st.session_state.llfeedback_scores = []
     st.session_state.last_response = None
 
 # 채팅 기록 표시
-for i, msg in enumerate(st.session_state.messages):
+for i, msg in enumerate(st.session_state.llmessage):
     st.chat_message(msg["role"]).write(msg["content"])
     if msg["role"] == "assistant":
         feedback = streamlit_feedback(
@@ -79,21 +95,34 @@ for i, msg in enumerate(st.session_state.messages):
         if feedback:
             scores = {"😀": 1, "🙂": 0.75, "😐": 0.5, "🙁": 0.25, "😞": 0}
             score = scores[feedback["score"]]
-            st.session_state.feedback_scores.append({"index": i, "score": score, "comment": feedback.get("text", "")})
+            st.session_state.llfeedback_scores.append({"index": i, "score": score, "comment": feedback.get("text", "")})
             if feedback.get("text"):
                 st.write(f"Comment: {feedback['text']}")
 
 # 사용자 입력 처리
 if input := st.chat_input(placeholder="Ask me anything..."):
-    st.session_state.messages.append({"role": "user", "content": input})
+    st.session_state.llmessage.append({"role": "user", "content": input})
     st.chat_message("user").write(input)
 
+    # Include lessons in the response
+    lessons_text = include_lessons_in_response(input, lessons_list)
+
+    modified_input = f"{input}\n\nRelated Lessons and Learnings:\n{lessons_text}"
+    print(modified_input)
+
     # LangChain을 사용한 OpenAI API 호출
-    response = llm_chain.run(input)
+    if len(lessons_text)>0:
+        response = llm_chain.run(modified_input)
+    else:
+        response="관련된 내용이 없습니다."
     
     # 응답 저장 및 표시
-    st.session_state.messages.append({"role": "assistant", "content": response})
+    st.session_state.llmessage.append({"role": "assistant", "content": response})
     st.chat_message("assistant").write(response)
+    
+    # 확장 버튼을 통해 원본 lessons_text 표시
+    with st.expander("Show Original Lessons"):
+        st.write(st.dataframe(lessons_list))
 
 # 피드백을 반영한 다음 대화 조정
 def adjust_response_based_on_feedback(response, feedback_scores):
@@ -112,8 +141,8 @@ def adjust_response_based_on_feedback(response, feedback_scores):
         return response
 
 # 마지막 응답에 대한 피드백을 반영한 후속 질문
-if st.session_state.messages and st.session_state.feedback_scores:
-    last_response = st.session_state.messages[-1]["content"]
-    adjusted_response = adjust_response_based_on_feedback(last_response, st.session_state.feedback_scores)
+if st.session_state.llmessage and st.session_state.llfeedback_scores:
+    last_response = st.session_state.llmessage[-1]["content"]
+    adjusted_response = adjust_response_based_on_feedback(last_response, st.session_state.llfeedback_scores)
     if adjusted_response != last_response:
         st.write(f"Adjusted response: {adjusted_response}")

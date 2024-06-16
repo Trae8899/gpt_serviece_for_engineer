@@ -7,9 +7,10 @@ from langchain.llms.fake import FakeListLLM
 from st_pages import Page, Section, show_pages, add_page_title, hide_pages
 from streamlit_feedback import streamlit_feedback
 
-st.set_page_config(page_title="RAG : Simple Feedback", page_icon="🦜")
-st.title("🦜 RAG : Simple Feedback")
+st.set_page_config(page_title="RFP Search Bot", page_icon="🦜")
+st.title("🦜 RFP Search Bot")
 st.sidebar.image(r"C:\Users\qkrwo\Documents\Digital\JPark\gpt_serviece_for_engineer\asset\Doosan_Logo.jpg")
+st.sidebar.write("# EPC)PE CENTER 👋")
 
 st.sidebar.success("Select a model that you want.")
 
@@ -48,12 +49,17 @@ else:
 
 
 # LangChain 설정
-
+pjtname=st.selectbox(
+    "PJT NAME",
+    ("jawa9&10","lumar","samcheok"),
+    )
 # gpt-3.5-turbo-instruct
 # llm = ChatOpenAI(openai_api_key=st.session_state['OPENAIAPI'],model="gpt-4o")
 # llm = OpenAI(openai_api_key=st.session_state['OPENAIAPI'],model_name="gpt-4o")
 memory = ConversationBufferMemory()
 llm_chain = ConversationChain(llm=llm, memory=memory)
+
+
 
 # 채팅 기록 유지
 if "messages" not in st.session_state:
@@ -94,6 +100,9 @@ if input := st.chat_input(placeholder="Ask me anything..."):
     # 응답 저장 및 표시
     st.session_state.messages.append({"role": "assistant", "content": response})
     st.chat_message("assistant").write(response)
+
+    with st.expander("Show Original Lessons"):
+        st.write("원본 retriever data 몇개")
 
 # 피드백을 반영한 다음 대화 조정
 def adjust_response_based_on_feedback(response, feedback_scores):
