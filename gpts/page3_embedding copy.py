@@ -42,8 +42,6 @@ elif st.session_state['llms'] == "AZURE OPEN AI":
     st.session_state['AZURE_OPENAI_API_KEY'] = st.sidebar.text_input("API KEY", value=st.session_state['AZURE_OPENAI_API_KEY'])
     st.session_state['AZURE_OPENAI_ENDPOINT'] = st.sidebar.text_input("END POINT", value=st.session_state['AZURE_OPENAI_ENDPOINT'])
 
-max_chars = 200000
-label = 'multi_doc'+str(date.today())
 
 
 def write_to_library(segmented_text, file_name):
